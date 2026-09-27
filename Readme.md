@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Егор Гришин](https://up.htmlacademy.ru/univer-nodejs-api/7/user/2723541).
-* Наставник: `Неизвестно`.
+* Наставник: [Глеб Клецков](https://htmlacademy.ru/profile/id1487865).
 
 ---
 
