@@ -13,6 +13,7 @@ import {
   Location,
 } from '../../types/index.js';
 import { UserEntity } from '../user/user.entity.js';
+import { DEFAULT_RATING } from './offer.constant.js';
 
 @modelOptions({ schemaOptions: { _id: false } })
 class LocationEntity implements Location {
@@ -86,11 +87,9 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public isPremium: boolean;
 
-  @prop({ required: true })
-  public isFavorite: boolean;
-
   @prop({
     required: true,
+    default: DEFAULT_RATING,
     min: 1,
     max: 5,
   })

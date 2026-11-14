@@ -10,6 +10,8 @@ import { ConsoleLogger, Logger } from '../../shared/libs/logger/index.js';
 import { Offer } from '../../shared/types/index.js';
 import { DEFAULT_USER_PASSWORD, DEFAULT_DB_PORT } from './command.constant.js';
 import { getMongoURI } from '../../shared/helpers/database.js';
+import { CommentModel } from '../../shared/modules/comment/index.js';
+import { FavoriteModel } from '../../shared/modules/favorite/index.js';
 
 export class ImportCommand implements Command {
   private userService: UserService;
@@ -24,7 +26,7 @@ export class ImportCommand implements Command {
 
     this.logger = new ConsoleLogger();
     this.userService = new DefaultUserService(this.logger, UserModel);
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.offerService = new DefaultOfferService(this.logger, OfferModel, CommentModel, FavoriteModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 
@@ -51,8 +53,9 @@ export class ImportCommand implements Command {
       ...offer.author,
       password: DEFAULT_USER_PASSWORD}, this.salt);
 
+    // isFavorite and rating are calculated by the REST API and aren't persisted during import.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { author, ...offerData } = offer;
+    const { author, isFavorite, rating, commentCount, ...offerData } = offer;
 
     await this.offerService.create({
       ...offerData,
