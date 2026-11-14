@@ -10,6 +10,7 @@ import { ConsoleLogger, Logger } from '../../shared/libs/logger/index.js';
 import { Offer } from '../../shared/types/index.js';
 import { DEFAULT_USER_PASSWORD, DEFAULT_DB_PORT } from './command.constant.js';
 import { getMongoURI } from '../../shared/helpers/database.js';
+import { CommentModel } from '../../shared/modules/comment/index.js';
 
 export class ImportCommand implements Command {
   private userService: UserService;
@@ -24,7 +25,7 @@ export class ImportCommand implements Command {
 
     this.logger = new ConsoleLogger();
     this.userService = new DefaultUserService(this.logger, UserModel);
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.offerService = new DefaultOfferService(this.logger, OfferModel, CommentModel);
     this.databaseClient = new MongoDatabaseClient(this.logger);
   }
 

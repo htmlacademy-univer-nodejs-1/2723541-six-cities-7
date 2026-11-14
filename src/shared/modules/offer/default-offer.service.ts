@@ -7,12 +7,14 @@ import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { OfferService } from './offer-service.interface.js';
 import { OfferEntity } from './offer.entity.js';
 import { DEFAULT_OFFER_COUNT, DEFAULT_PREMIUM_OFFER_COUNT } from './offer.constant.js';
+import type { CommentEntity } from '../comment/index.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
-    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>
+    @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
@@ -54,10 +56,22 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
+  async deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null> {
+    const deletedOffer = await this.offerModel
       .findByIdAndDelete(offerId)
       .exec();
+
+    if (deletedOffer) {
+      await this.commentModel
+        .deleteMany({ offerId })
+        .exec();
+
+      this.logger.info(
+        `Deleted offer with ID: ${offerId} and its comments`
+      );
+    }
+
+    return deletedOffer;
   }
 
   public findPremium(city: CityName): Promise<DocumentType<OfferEntity>[]> {
