@@ -6,22 +6,26 @@ import { CreateOfferDto } from './dto/create-offer.dto.js';
 import { UpdateOfferDto } from './dto/update-offer.dto.js';
 import { OfferService } from './offer-service.interface.js';
 import { OfferEntity } from './offer.entity.js';
-import { DEFAULT_OFFER_COUNT, DEFAULT_PREMIUM_OFFER_COUNT } from './offer.constant.js';
+import { DEFAULT_OFFER_COUNT, DEFAULT_PREMIUM_OFFER_COUNT, DEFAULT_RATING } from './offer.constant.js';
 import type { CommentEntity } from '../comment/index.js';
+import type { FavoriteEntity } from '../favorite/index.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.OfferModel) private readonly offerModel: types.ModelType<OfferEntity>,
-    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>
+    @inject(Component.CommentModel) private readonly commentModel: types.ModelType<CommentEntity>,
+    @inject(Component.FavoriteModel) private readonly favoriteModel: types.ModelType<FavoriteEntity>
   ) {}
 
   public async create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>> {
     const { authorId, ...offerData } = dto;
     const createdOffer = await this.offerModel.create({
       ...offerData,
-      author: authorId
+      author: authorId,
+      rating: DEFAULT_RATING,
+      commentCount: 0,
     });
     this.logger.info(`Created offer with ID: ${createdOffer._id}`);
     return createdOffer;
@@ -66,8 +70,12 @@ export class DefaultOfferService implements OfferService {
         .deleteMany({ offerId })
         .exec();
 
+      await this.favoriteModel
+        .deleteMany({ offerId })
+        .exec();
+
       this.logger.info(
-        `Deleted offer with ID: ${offerId} and its comments`
+        `Deleted offer with ID: ${offerId}, its comments and favorite records`
       );
     }
 

@@ -693,6 +693,8 @@ components:
           example: true
         isFavorite:
           type: boolean
+          readOnly: true
+          description: Вычисляется относительно текущего пользователя.
           example: false
         rating:
           type: number
@@ -700,6 +702,8 @@ components:
           minimum: 1
           maximum: 5
           multipleOf: 0.1
+          readOnly: true
+          description: Средняя оценка из комментариев; до первого комментария равна 1.
           example: 4.8
         housingType:
           $ref: '#/components/schemas/housingType'
