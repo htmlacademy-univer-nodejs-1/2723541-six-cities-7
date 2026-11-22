@@ -1,0 +1,26 @@
+# Избранные предложения
+
+@baseUrl = http://localhost:4000
+@offerId = 000000000000000000000000
+@token = replace-with-access-token
+
+## Получить список избранных предложений
+
+GET {{baseUrl}}/favorites HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
+
+## Добавить предложение в избранное
+
+PUT {{baseUrl}}/favorites/{{offerId}} HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
+
+## Удалить предложение из избранного
+
+DELETE {{baseUrl}}/favorites/{{offerId}} HTTP/1.1
+Authorization: Bearer {{token}}
+
+###
