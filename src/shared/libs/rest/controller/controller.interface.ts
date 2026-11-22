@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { Route } from '../types/route.interface.js';
 
 export interface Controller {
