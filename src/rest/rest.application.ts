@@ -35,6 +35,10 @@ export class RestApplication {
     this.server.listen(port);
   }
 
+  public async _initMiddleware() {
+    this.server.use(express.json());
+  }
+
   public async init() {
     this.logger.info('Application initialized');
     this.logger.info(`Get value from env $PORT: ${this.config.get('PORT')}`);
@@ -42,6 +46,10 @@ export class RestApplication {
     this.logger.info('Initializing database connection...');
     await this._initDb();
     this.logger.info('Init database completed');
+
+    this.logger.info('Initializing app-level middleware...');
+    await this._initMiddleware();
+    this.logger.info('Init app-level middleware completed');
 
     this.logger.info('Initializing server...');
     await this._initServer();
