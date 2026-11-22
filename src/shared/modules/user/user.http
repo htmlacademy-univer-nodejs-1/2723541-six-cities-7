@@ -25,3 +25,15 @@ Content-Type: application/json
 }
 
 ###
+
+## Завершить пользовательский сеанс
+
+DELETE http://localhost:4000/users/logout HTTP/1.1
+
+###
+
+## Проверить состояние пользователя
+
+GET http://localhost:4000/users/status HTTP/1.1
+
+###

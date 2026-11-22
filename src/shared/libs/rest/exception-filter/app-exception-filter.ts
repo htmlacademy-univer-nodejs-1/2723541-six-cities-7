@@ -18,14 +18,16 @@ export class AppExceptionFilter implements ExceptionFilter {
 
   private handleHttpError(error: HttpError, _req: Request, res: Response, _next: NextFunction) {
     this.logger.error(`[${error.detail}]: ${error.httpStatusCode} — ${error.message}`, error);
-    res.status(error.httpStatusCode)
-      .json(createErrorObject('Internal server error'));
+    res
+      .status(error.httpStatusCode)
+      .json(createErrorObject(error.message));
   }
 
   private handleOtherError(error: Error, _req:Request, res: Response, _next: NextFunction) {
     this.logger.error(error.message, error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json(createErrorObject('Internal server error'));
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json(createErrorObject(error.message));
   }
 
   public catch(error: Error | HttpError, req: Request, res: Response, next: NextFunction): void {

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Logger } from '../../libs/logger/index.js';
-import { Response } from 'express';
+import type { Request, Response } from 'express';
 import { BaseController, HttpError, HttpMethod } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { CreateUserRequest } from './create-user-request.type.js';
@@ -23,6 +23,9 @@ export class UserController extends BaseController {
 
     this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
+    this.addRoute({ path: '/logout', method: HttpMethod.Delete, handler: this.logout });
+    this.addRoute({ path: '/status', method: HttpMethod.Get, handler: this.status });
+    this.addRoute({ path: '/:userId/avatar', method: HttpMethod.Post, handler: this.uploadAvatar });
   }
 
   public async create(
@@ -40,7 +43,12 @@ export class UserController extends BaseController {
     }
 
     const result = await this.userService.create(body, this.configService.get('SALT'));
-    this.created(res, fillDTO(UserRdo, result));
+    const userResponse = fillDTO(UserRdo, {
+      ...result.toObject(),
+      id: result.id,
+    });
+
+    this.created(res, userResponse);
   }
 
   public async login(
@@ -60,6 +68,26 @@ export class UserController extends BaseController {
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       'Not implemented',
+      'UserController',
+    );
+  }
+
+  public logout(_req: Request, res: Response): void {
+    this.noContent(res);
+  }
+
+  public status(_req: Request, _res: Response): never {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'User status requires authentication middleware',
+      'UserController',
+    );
+  }
+
+  public uploadAvatar(_req: Request, _res: Response): never {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Avatar upload requires multipart middleware',
       'UserController',
     );
   }
