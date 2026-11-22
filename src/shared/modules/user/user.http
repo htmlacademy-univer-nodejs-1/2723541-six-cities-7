@@ -1,0 +1,39 @@
+# Пользователи
+## Создать нового пользователя
+
+POST http://localhost:4000/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Jack Torrance",
+  "email": "torans@overlook.net",
+  "avatar": "torrance.png",
+  "password": "shining",
+  "type": "обычный"
+}
+
+###
+
+## Авторизовать пользователя
+
+POST http://localhost:4000/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "torans@overlook.net",
+  "password": "shining"
+}
+
+###
+
+## Завершить пользовательский сеанс
+
+DELETE http://localhost:4000/users/logout HTTP/1.1
+
+###
+
+## Проверить состояние пользователя
+
+GET http://localhost:4000/users/status HTTP/1.1
+
+###

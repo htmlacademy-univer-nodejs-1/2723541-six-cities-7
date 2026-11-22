@@ -4,3 +4,7 @@ export * from './offer.entity.js';
 export * from './offer.container.js';
 export * from './default-offer.service.js';
 export * from './dto/update-offer.dto.js';
+export * from './offer.controller.js';
+export * from './offer-request.type.js';
+export * from './rdo/offer-list-item.rdo.js';
+export * from './rdo/offer.rdo.js';
